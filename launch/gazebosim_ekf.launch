@@ -5,6 +5,7 @@
     <rosparam command="load" file="$(find robot_localization)/params/gazebosim_ekf.yaml" />
     <remap from="odom" to="rov/odom"/>
     <remap from="imu" to="rov/imu"/>
+    <remap from="depth_sensor" to="rov/depth_sensor"/>
   </node>
  
 </launch>
