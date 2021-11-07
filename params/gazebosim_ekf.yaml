@@ -81,9 +81,11 @@ odom0: odom
 # do not provide some of the state variables estimated by the filter. For example, a TwistWithCovarianceStamped message
 # has no pose information, so the first six values would be meaningless in that case. Each vector defaults to all false
 # if unspecified, effectively making this parameter required for each sensor.
+
+
 odom0_config: [false,  false,  false,
                false, false, false,
-               true, true, false,
+               true, false, false,
                false, false, true,
                false, false, false]
 
@@ -137,7 +139,7 @@ odom0_relative: true
 
 pose0: pose
 pose0_config: [true,  true,  true,
-               false, false, false,
+               true, true, true,
                false, false, false,
                false, false, false,
                false, false, false]
@@ -147,17 +149,17 @@ pose0_queue_size: 10
 pose0_rejection_threshold: 2000  # Note the difference in parameter name
 pose0_nodelay: false
 
-pose1: depth_sensor
-pose1_config: [false, false, true,
-               false, false, false,
-               false, false, false,
-               false, false, false,
-               false, false, false]
-pose1_differential: false
-pose1_relative: false
-pose1_queue_size: 10
-pose1_rejection_threshold: 2000  # Note the difference in parameter name
-pose1_nodelay: false
+# pose1: depth_sensor
+# pose1_config: [false, true, false,
+#                false, false, false,
+#                false, false, false,
+#                false, false, false,
+#                false, false, false]
+# pose1_differential: false
+# pose1_relative: false
+# pose1_queue_size: 1
+# pose1_rejection_threshold: 2000  # Note the difference in parameter name
+# pose1_nodelay: false
 
 # twist0: example/twist
 # twist0_config: [false, false, false,
@@ -170,6 +172,13 @@ pose1_nodelay: false
 # twist0_nodelay: false
 
 imu0: imu
+# remember mag data is in odom frame, gyro and accel are in imu_link frame 
+#  The order of the boolean values are 
+# [𝑋, 𝑌, 𝑍,
+# 𝑟𝑜𝑙𝑙, 𝑝𝑖𝑡𝑐ℎ, 𝑦𝑎𝑤,
+# 𝑋˙, 𝑌˙, 𝑍˙,
+# 𝑟𝑜𝑙𝑙, 𝑝𝑖𝑡𝑐ℎ˙, 𝑦𝑎𝑤,
+# 𝑋¨, 𝑌¨, 𝑍¨]
 imu0_config: [false, false, false,
               true, true, true,
               false, false, false,
@@ -186,7 +195,7 @@ imu0_linear_acceleration_rejection_threshold: 8  #
 
 # # [ADVANCED] Some IMUs automatically remove acceleration due to gravity, and others don't. If yours doesn't, please set
 # # this to true, and *make sure* your data conforms to REP-103, specifically, that the data is in ENU frame.
-imu0_remove_gravitational_acceleration: true
+imu0_remove_gravitational_acceleration: false 
 
 # [ADVANCED]  The EKF and UKF models follow a standard predict/correct cycle. During prediction, if there is no
 # acceleration reference, the velocity at time t+1 is simply predicted to be the same as the velocity at time t. During
@@ -251,8 +260,8 @@ imu0_remove_gravitational_acceleration: true
 #                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    5]
 
 # everything enabled 
-process_noise_covariance: [5,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
-                           0,    5,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+process_noise_covariance: [0.005,0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0.005,0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
                            0,    0,    0.005,0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
                            0,    0,    0,    0.005,0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
                            0,    0,    0,    0,    0.005,0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
@@ -260,29 +269,29 @@ process_noise_covariance: [5,    0,    0,    0,    0,    0,    0,     0,     0, 
                            0,    0,    0,    0,    0,    0,    0.005, 0,     0,    0,    0,    0,    0,    0,    0,
                            0,    0,    0,    0,    0,    0,    0,     0.005, 0,    0,    0,    0,    0,    0,    0,
                            0,    0,    0,    0,    0,    0,    0,     0,     5,    0,    0,    0,    0,    0,    0,
-                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0.001,0,    0,    0,    0,    0,
-                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0.001,0,    0,    0,    0,
-                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0.001,0,    0,    0,
-                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0.05, 0,    0,
-                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0.05, 0,
-                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0.05]
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0.0001,0,   0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0.0001,0,   0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0.0001,0,   0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0.0001,0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0.0001,0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0.0001]
 
-# only IMU accel enabled 
-# process_noise_covariance: [5,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+# only IMU enabled 
+# process_noise_covariance: [4,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
 #                            0,    5,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
 #                            0,    0,    5,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
-#                            0,    0,    0,    5,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
-#                            0,    0,    0,    0,    5,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
-#                            0,    0,    0,    0,    0,    5,    0,     0,     0,    0,    0,    0,    0,    0,    0,
-#                            0,    0,    0,    0,    0,    0,    0.005, 0,     0,    0,    0,    0,    0,    0,    0,
-#                            0,    0,    0,    0,    0,    0,    0,     0.005, 0,    0,    0,    0,    0,    0,    0,
+#                            0,    0,    0,    0.005,0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+#                            0,    0,    0,    0,    0.005,0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+#                            0,    0,    0,    0,    0,    0.005,0,     0,     0,    0,    0,    0,    0,    0,    0,
+#                            0,    0,    0,    0,    0,    0,    5,     0,     0,    0,    0,    0,    0,    0,    0,
+#                            0,    0,    0,    0,    0,    0,    0,     5,     0,    0,    0,    0,    0,    0,    0,
 #                            0,    0,    0,    0,    0,    0,    0,     0,     5,    0,    0,    0,    0,    0,    0,
-#                            0,    0,    0,    0,    0,    0,    0,     0,     0,    5,    0,    0,    0,    0,    0,
-#                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    5,    0,    0,    0,    0,
-#                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0.05, 0,    0,    0,
-#                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0.5, 0,    0,
-#                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0.5, 0,
-#                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0.5]
+#                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0.005,0,    0,    0,    0,    0,
+#                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0.005,0,    0,    0,    0,
+#                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0.005,0,    0,    0,
+#                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0.005,0,    0,
+#                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0.005,0,
+#                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0.005]
 
 
 # [ADVANCED] This represents the initial value for the state estimate error covariance matrix. Setting a diagonal
