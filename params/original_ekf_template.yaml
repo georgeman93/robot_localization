@@ -3,6 +3,7 @@
 # frequency specified here, regardless of whether it receives more measurements. Defaults to 30 if unspecified.
 frequency: 30
 
+silent_tf_failure: false
 # The period, in seconds, after which we consider a sensor to have timed out. In this event, we carry out a predict
 # cycle on the EKF without correcting it. This parameter can be thought of as the minimum frequency with which the
 # filter will generate new output. Defaults to 1 / frequency if not specified.
@@ -26,9 +27,6 @@ transform_timeout: 0.0
 # If you're having trouble, try setting this to true, and then echo the /diagnostics_agg topic to see if the node is
 # unhappy with any settings or data.
 print_diagnostics: true
-
-# Whether we'll allow old measurements to cause a re-publication of the updated state
-permit_corrected_publication: false
 
 # Debug settings. Not for the faint of heart. Outputs a ludicrous amount of information to the file specified by
 # debug_out_file. I hope you like matrices! Please note that setting this to true will have strongly deleterious
@@ -254,14 +252,3 @@ initial_estimate_covariance: [1e-9, 0,    0,    0,    0,    0,    0,    0,    0,
                               0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     1e-9, 0,    0,
                               0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    1e-9, 0,
                               0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    1e-9]
-
-# [ADVANCED, UKF ONLY] The alpha and kappa variables control the spread of the sigma points. Unless you are familiar
-# with UKFs, it's probably a good idea to leave these alone.
-# Defaults to 0.001 if unspecified.
-alpha: 0.001
-# Defaults to 0 if unspecified.
-kappa: 0
-
-# [ADVANCED, UKF ONLY] The beta variable relates to the distribution of the state vector. Again, it's probably best to
-# leave this alone if you're uncertain. Defaults to 2 if unspecified.
-beta: 2
